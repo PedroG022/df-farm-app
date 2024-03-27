@@ -7,42 +7,50 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FarmRepository::class)]
 class Farm
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    private ?Uuid $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $hectares = null;
+    #[ORM\Column(type: Types::FLOAT)]
+    #[Assert\NotBlank]
+    #[Assert\Positive]
+    private ?float $hectares = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $responsible = null;
-
-    #[ORM\ManyToMany(targetEntity: Veterinarian::class, inversedBy: 'farms')]
-    private Collection $veterinarians;
 
     #[ORM\OneToMany(targetEntity: Cattle::class, mappedBy: 'farm')]
     private Collection $cattle;
 
+    #[ORM\ManyToMany(targetEntity: Veterinarian::class, inversedBy: 'farms')]
+    private Collection $veterinarians;
+
     public function __construct()
     {
-        $this->veterinarians = new ArrayCollection();
         $this->cattle = new ArrayCollection();
+        $this->veterinarians = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
 
-    public function setId(string $id): static
+    public function setId(Uuid $id): static
     {
         $this->id = $id;
 
@@ -61,12 +69,12 @@ class Farm
         return $this;
     }
 
-    public function getHectares(): ?int
+    public function getHectares(): ?float
     {
         return $this->hectares;
     }
 
-    public function setHectares(int $hectares): static
+    public function setHectares(float $hectares): static
     {
         $this->hectares = $hectares;
 
@@ -81,30 +89,6 @@ class Farm
     public function setResponsible(string $responsible): static
     {
         $this->responsible = $responsible;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Veterinarian>
-     */
-    public function getVeterinarians(): Collection
-    {
-        return $this->veterinarians;
-    }
-
-    public function addVeterinarian(Veterinarian $veterinarian): static
-    {
-        if (!$this->veterinarians->contains($veterinarian)) {
-            $this->veterinarians->add($veterinarian);
-        }
-
-        return $this;
-    }
-
-    public function removeVeterinarian(Veterinarian $veterinarian): static
-    {
-        $this->veterinarians->removeElement($veterinarian);
 
         return $this;
     }
@@ -135,6 +119,30 @@ class Farm
                 $cattle->setFarm(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Veterinarian>
+     */
+    public function getVeterinarians(): Collection
+    {
+        return $this->veterinarians;
+    }
+
+    public function addVeterinarian(Veterinarian $veterinarian): static
+    {
+        if (!$this->veterinarians->contains($veterinarian)) {
+            $this->veterinarians->add($veterinarian);
+        }
+
+        return $this;
+    }
+
+    public function removeVeterinarian(Veterinarian $veterinarian): static
+    {
+        $this->veterinarians->removeElement($veterinarian);
 
         return $this;
     }

@@ -5,40 +5,52 @@ namespace App\Entity;
 use App\Repository\CattleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CattleRepository::class)]
 class Cattle
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    private ?Uuid $id = null;
 
-    #[ORM\Column(length: 64)]
+    #[ORM\Column(length: 64, unique: true)]
+    #[Assert\NotBlank]
     private ?string $code = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $milk_produced = null;
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Positive]
+    private ?float $milk_per_week = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $feed = null;
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Positive]
+    private ?float $feed = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $weight = null;
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Positive]
+    private ?float $weight = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotBlank]
     private ?\DateTimeInterface $birthdate = null;
 
     #[ORM\ManyToOne(inversedBy: 'cattle')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Farm $farm = null;
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
 
-    public function setId(string $id): static
+    public function setId(Uuid $id): static
     {
         $this->id = $id;
 
@@ -57,36 +69,36 @@ class Cattle
         return $this;
     }
 
-    public function getMilkProduced(): ?int
+    public function getMilkPerWeek(): ?float
     {
-        return $this->milk_produced;
+        return $this->milk_per_week;
     }
 
-    public function setMilkProduced(int $milk_produced): static
+    public function setMilkPerWeek(float $milk_per_week): static
     {
-        $this->milk_produced = $milk_produced;
+        $this->milk_per_week = $milk_per_week;
 
         return $this;
     }
 
-    public function getFeed(): ?int
+    public function getFeed(): ?float
     {
         return $this->feed;
     }
 
-    public function setFeed(int $feed): static
+    public function setFeed(float $feed): static
     {
         $this->feed = $feed;
 
         return $this;
     }
 
-    public function getWeight(): ?int
+    public function getWeight(): ?float
     {
         return $this->weight;
     }
 
-    public function setWeight(int $weight): static
+    public function setWeight(float $weight): static
     {
         $this->weight = $weight;
 
