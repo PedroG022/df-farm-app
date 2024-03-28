@@ -32,7 +32,9 @@
                     <p>{{ farm.responsible }}</p>
                 </td>
                 <td>
-                    <p>{{ farm.responsible }}</p>
+                    {% for veterinarian in farm.veterinarians %}
+                        <span class="badge text-bg-primary">{{ veterinarian.name }}</span>
+                    {% endfor %}
                 </td>
                 <td>
                     <a href="{{ path('edit_farm', {id: farm.id}) }}">Editar</a>

@@ -31,10 +31,11 @@ class FarmType extends AbstractType
             ])
             ->add('veterinarians', EntityType::class, [
                 'class' => Veterinarian::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
                 'multiple' => true,
                 'label' => 'Veterinários:',
-                'required' => false])
+                'required' => false,
+                'expanded' => true,])
             ->add('submit', SubmitType::class, [
                 'label' => 'Cadastrar Fazenda',
                 'attr' => [
