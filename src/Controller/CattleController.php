@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Cattle;
 use App\Form\CattleType;
 use App\Repository\CattleRepository;
+use App\Service\GlobalVariables;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,6 @@ use Symfony\Component\Uid\Uuid;
 
 class CattleController extends AbstractController
 {
-    private const MAX_CATTLE_PER_HECTARE = 18;
     private EntityManagerInterface $entityManager;
     private CattleRepository $cattleRepository;
 
@@ -99,7 +99,7 @@ class CattleController extends AbstractController
 
         # The maximum amount of cattle per farm is decided by its amount
         # of hectares. A farm can have only 18 animals per hectare.
-        $max_cattle_amount = $farm_hectare * self::MAX_CATTLE_PER_HECTARE;
+        $max_cattle_amount = $farm_hectare * GlobalVariables::MAX_CATTLE_PER_HECTARE;
 
         if ($farm_cattle_amount + 1 <= $max_cattle_amount) {
             return true;
