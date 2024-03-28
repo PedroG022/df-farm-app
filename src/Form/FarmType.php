@@ -37,7 +37,7 @@ class FarmType extends AbstractType
                 'required' => false,
                 'expanded' => true,])
             ->add('submit', SubmitType::class, [
-                'label' => 'Cadastrar Fazenda',
+                'label' => $options['label'],
                 'attr' => [
                     'class' => 'btn-primary w-100'
                 ]]);

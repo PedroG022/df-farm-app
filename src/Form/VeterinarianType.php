@@ -37,7 +37,7 @@ class VeterinarianType extends AbstractType
                 'expanded' => true,
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Adicionar veterinário',
+                'label' => $options['label'],
                 'attr' => [
                     'class' => 'btn btn-primary w-100'
                 ]

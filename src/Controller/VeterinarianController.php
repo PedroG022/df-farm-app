@@ -37,7 +37,7 @@ class VeterinarianController extends AbstractController
     public function new(Request $request): Response
     {
         $veterinarian = new Veterinarian();
-        return $this->create_update_veterinarian($request, $veterinarian);
+        return $this->create_update_veterinarian('Adicionar veterinário', $request, $veterinarian);
     }
 
     #[Route('/veterinarians/edit/{id}', name: 'edit_veterinarian')]
@@ -53,7 +53,7 @@ class VeterinarianController extends AbstractController
             $farm->removeVeterinarian($veterinarian);
         }
 
-        return $this->create_update_veterinarian($request, $veterinarian);
+        return $this->create_update_veterinarian('Editar veterinário', $request, $veterinarian);
     }
 
     #[Route('/veterinarians/delete/{id}', name: 'delete_veterinarian')]
@@ -70,9 +70,9 @@ class VeterinarianController extends AbstractController
     }
 
 
-    public function create_update_veterinarian(Request $request, Veterinarian $veterinarian): Response
+    public function create_update_veterinarian(string $label, Request $request, Veterinarian $veterinarian): Response
     {
-        $form = $this->createForm(VeterinarianType::class, $veterinarian);
+        $form = $this->createForm(VeterinarianType::class, $veterinarian, ['label' => $label]);
 
         $form->handleRequest($request);
 
@@ -92,6 +92,7 @@ class VeterinarianController extends AbstractController
 
         return $this->render('veterinarian/new.html.twig', [
             'form' => $form->createView(),
+            'title' => $label,
         ]);
     }
 

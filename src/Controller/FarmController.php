@@ -41,7 +41,7 @@ class FarmController extends AbstractController
     public function new(Request $request): Response
     {
         $target_farm = new Farm();
-        $form = $this->createForm(FarmType::class, $target_farm);
+        $form = $this->createForm(FarmType::class, $target_farm, ['label' => 'Adicionar fazenda']);
 
         $form->handleRequest($request);
 
@@ -57,6 +57,7 @@ class FarmController extends AbstractController
 
         return $this->render('farm/new.html.twig', [
             'form' => $form,
+            'title' => 'Adicionar fazenda'
         ]);
     }
 
@@ -66,7 +67,7 @@ class FarmController extends AbstractController
     public function edit(Uuid $id, Request $request): Response
     {
         $database_farm = $this->farmRepository->findOneById($id);
-        $form = $this->createForm(FarmType::class, $database_farm);
+        $form = $this->createForm(FarmType::class, $database_farm, ['label' => 'Atualizar fazenda']);
 
         $form->handleRequest($request);
 
@@ -81,7 +82,8 @@ class FarmController extends AbstractController
         }
 
         return $this->render('farm/new.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'title' => 'Atualizar fazenda'
         ]);
     }
 
