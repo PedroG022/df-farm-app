@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Veterinarian;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<Veterinarian>
@@ -19,6 +20,26 @@ class VeterinarianRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Veterinarian::class);
+    }
+
+    public function findOneByCrmv(string $crmv): ?Veterinarian
+    {
+        return $this->createQueryBuilder('v')
+            ->addSelect('v')
+            ->andWhere('v.crmv = :crmv')
+            ->setParameter('crmv', $crmv)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findOneById(Uuid $id): ?Veterinarian
+    {
+        return $this->createQueryBuilder('v')
+            ->addSelect('v')
+            ->andWhere('v.id = :id')
+            ->setParameter('id', $id->toBinary())
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 //    /**
