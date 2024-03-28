@@ -63,10 +63,13 @@ class FarmController extends AbstractController
             $updated_farm = $form->getData();
 
             if ($this->already_exists($updated_farm)) {
-                return new Response('Já existe uma fazenda com este nome!', 400);
+                $this->addFlash(
+                    'error',
+                    'Já existe uma fazenda com esse nome!'
+                );
+            } else {
+                return $this->persist_and_exit($updated_farm);
             }
-
-            return $this->persist_and_exit($updated_farm);
         }
 
         return $this->render('farm/new.html.twig', [
@@ -102,7 +105,7 @@ class FarmController extends AbstractController
 
         # Add flash message
         $this->addFlash(
-            'message',
+            'success',
             'Operação concluída com sucesso!'
         );
 

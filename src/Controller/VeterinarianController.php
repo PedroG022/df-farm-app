@@ -80,14 +80,14 @@ class VeterinarianController extends AbstractController
             $updated_veterinarian = $form->getData();
 
             if ($this->already_exists($updated_veterinarian)) {
-                return new Response('Já existe um veterinário com este CRM!', 400);
-            }
+                $this->addFlash('error', 'Já existe um veterinário com este CRM!');
+            } else {
+                foreach ($updated_veterinarian->getFarms() as $farm) {
+                    $farm->addVeterinarian($updated_veterinarian);
+                }
 
-            foreach ($updated_veterinarian->getFarms() as $farm) {
-                $farm->addVeterinarian($updated_veterinarian);
+                return $this->persist_and_exit($updated_veterinarian);
             }
-
-            return $this->persist_and_exit($updated_veterinarian);
         }
 
         return $this->render('veterinarian/new.html.twig', [
@@ -103,7 +103,7 @@ class VeterinarianController extends AbstractController
 
         # Add flash message
         $this->addFlash(
-            'message',
+            'success',
             'Operação concluída com sucesso!'
         );
 
