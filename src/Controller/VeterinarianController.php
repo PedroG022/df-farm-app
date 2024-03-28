@@ -90,9 +90,10 @@ class VeterinarianController extends AbstractController
             }
         }
 
-        return $this->render('veterinarian/new.html.twig', [
+        return $this->render('shared/new.html.twig', [
             'form' => $form->createView(),
             'title' => $label,
+            'index_function' => 'index_veterinarian'
         ]);
     }
 

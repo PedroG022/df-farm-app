@@ -72,9 +72,10 @@ class FarmController extends AbstractController
             }
         }
 
-        return $this->render('farm/new.html.twig', [
+        return $this->render('shared/new.html.twig', [
             'form' => $form->createView(),
-            'title' => $label
+            'title' => $label,
+            'index_function' => 'index_farm'
         ]);
     }
 
