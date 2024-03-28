@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Cattle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<Cattle>
@@ -19,6 +20,26 @@ class CattleRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Cattle::class);
+    }
+
+    public function findOneById(Uuid $id): ?Cattle
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c')
+            ->andWhere('c.id = :id')
+            ->setParameter('id', $id->toBinary())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findOneByCode(string $code): ?Cattle
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c')
+            ->andWhere('c.code = :code')
+            ->setParameter('code', $code)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
 //    /**
