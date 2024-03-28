@@ -64,6 +64,8 @@ class VeterinarianController extends AbstractController
         if ($database_veterinarian != null) {
             $this->entityManager->remove($database_veterinarian);
             $this->entityManager->flush();
+
+            $this->addFlash('success', 'Operação concluída com sucesso!');
         }
 
         return $this->redirectToRoute('index_veterinarian');

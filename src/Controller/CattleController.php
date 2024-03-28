@@ -57,6 +57,7 @@ class CattleController extends AbstractController
             $this->entityManager->remove($database_cattle);
             $this->entityManager->flush();
 
+            $this->addFlash('success', 'Operação concluída com sucesso!');
         }
 
         return $this->redirectToRoute('index_cattle');

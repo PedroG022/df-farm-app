@@ -90,6 +90,7 @@ class FarmController extends AbstractController
             $this->entityManager->remove($database_farm);
             $this->entityManager->flush();
 
+            $this->addFlash('success', 'Operação concluída com sucesso!');
         }
 
         return $this->redirectToRoute('index_farm');
