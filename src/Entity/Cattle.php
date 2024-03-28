@@ -22,23 +22,24 @@ class Cattle
     #[Assert\NotBlank]
     private ?string $code = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::FLOAT)]
     #[Assert\NotBlank]
     #[Assert\Positive]
     private ?float $milk_per_week = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::FLOAT)]
     #[Assert\NotBlank]
     #[Assert\Positive]
     private ?float $feed = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::FLOAT)]
     #[Assert\NotBlank]
     #[Assert\Positive]
     private ?float $weight = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotBlank]
+    #[Assert\LessThanOrEqual('today')]
     private ?\DateTimeInterface $birthdate = null;
 
     #[ORM\ManyToOne(inversedBy: 'cattle')]
