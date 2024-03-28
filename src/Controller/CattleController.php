@@ -7,6 +7,7 @@ use App\Form\CattleType;
 use App\Repository\CattleRepository;
 use App\Service\GlobalVariables;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,19 +19,20 @@ class CattleController extends AbstractController
     private EntityManagerInterface $entityManager;
     private CattleRepository $cattleRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, CattleRepository $cattleRepository)
+    public function __construct(EntityManagerInterface $entityManager, CattleRepository $cattleRepository, PaginatorInterface $paginator)
     {
         $this->entityManager = $entityManager;
         $this->cattleRepository = $cattleRepository;
     }
 
     #[Route('/cattle', name: 'index_cattle')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $cattle_list = $this->cattleRepository->findAll();
+        $page = $request->query->getInt('page', 1);
+        $pagination = $this->cattleRepository->findAllPaginated($page, GlobalVariables::PAGINATION_LIMIT);
 
         return $this->render('cattle/index.html.twig', [
-            'cattle_list' => $cattle_list
+            'pagination' => $pagination
         ]);
     }
 

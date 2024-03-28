@@ -1,0 +1,5 @@
+<div>
+    <th{% if pagination.isSorted(attribute) %} class="sorted"{% endif %}>
+        {{ knp_pagination_sortable(pagination, label, attribute) }}
+    </th>
+</div>

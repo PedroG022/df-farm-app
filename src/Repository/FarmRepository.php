@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Farm;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -17,9 +19,25 @@ use Symfony\Component\Uid\Uuid;
  */
 class FarmRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private PaginatorInterface $paginator;
+
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, Farm::class);
+        $this->paginator = $paginator;
+    }
+
+    public function findAllPaginated(int $page, int $limit): PaginationInterface
+    {
+        $query = $this->createQueryBuilder('f')
+            ->select('f')
+            ->getQuery();
+
+        return $this->paginator->paginate(
+            $query,
+            $page,
+            $limit
+        );
     }
 
     public function findOneById(Uuid $id): ?Farm

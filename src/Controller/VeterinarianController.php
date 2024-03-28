@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Veterinarian;
 use App\Form\VeterinarianType;
 use App\Repository\VeterinarianRepository;
+use App\Service\GlobalVariables;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,12 +25,13 @@ class VeterinarianController extends AbstractController
     }
 
     #[Route('/veterinarians', name: 'index_veterinarian')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $veterinarians = $this->veterinarianRepository->findAll();
+        $page = $request->query->getInt('page', 1);
+        $pagination = $this->veterinarianRepository->findAllPaginated($page, GlobalVariables::PAGINATION_LIMIT);
 
         return $this->render('veterinarian/index.html.twig', [
-            'veterinarians' => $veterinarians,
+            'pagination' => $pagination,
         ]);
     }
 

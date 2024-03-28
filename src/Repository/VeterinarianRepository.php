@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Veterinarian;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -17,9 +19,25 @@ use Symfony\Component\Uid\Uuid;
  */
 class VeterinarianRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private PaginatorInterface $paginator;
+
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, Veterinarian::class);
+        $this->paginator = $paginator;
+    }
+
+    public function findAllPaginated(int $page, int $limit): PaginationInterface
+    {
+        $query = $this->createQueryBuilder('v')
+            ->select('v')
+            ->getQuery();
+
+        return $this->paginator->paginate(
+            $query,
+            $page,
+            $limit
+        );
     }
 
     public function findOneByCrmv(string $crmv): ?Veterinarian
@@ -41,29 +59,4 @@ class VeterinarianRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
-
-//    /**
-//     * @return Veterinarian[] Returns an array of Veterinarian objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('v.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Veterinarian
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Farm;
 use App\Form\FarmType;
 use App\Repository\FarmRepository;
+use App\Service\GlobalVariables;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,12 +27,13 @@ class FarmController extends AbstractController
     # Route used to display the index page of
     # the farms.
     #[Route('/farms', name: 'index_farm')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $farms = $this->farmRepository->findAll();
+        $page = $request->query->getInt('page', 1);
+        $pagination = $this->farmRepository->findAllPaginated($page, GlobalVariables::PAGINATION_LIMIT);
 
         return $this->render('farm/index.html.twig', [
-            'farms' => $farms,
+            'pagination' => $pagination,
         ]);
     }
 

@@ -4,7 +4,6 @@
 {% block section_title %}Gado{% endblock %}
 
 {% block body %}
-
     <a href="{{ path('new_cattle') }}">
         <button class="btn btn-success w-100 mt-5">Adicionar gado</button>
     </a>
@@ -12,17 +11,17 @@
     <table class="table table-striped table-hover mt-2">
         <thead class="table-success">
         <tr>
-            <th scope="col">Código</th>
-            <th scope="col">Peso</th>
-            <th scope="col">Leite</th>
-            <th scope="col">Ração</th>
-            <th scope="col">Data de nascimento</th>
-            <th scope="col">Fazenda</th>
+            <twig:SortableHeader attribute="c.code" label="Código"></twig:SortableHeader>
+            <twig:SortableHeader attribute="c.weight" label="Peso"></twig:SortableHeader>
+            <twig:SortableHeader attribute="c.milk_per_week" label="Leite"></twig:SortableHeader>
+            <twig:SortableHeader attribute="c.feed" label="Ração"></twig:SortableHeader>
+            <twig:SortableHeader attribute="c.birthdate" label="Data de nascimento"></twig:SortableHeader>
+            <th>Fazenda</th>
             <th scope="col">Ações</th>
         </tr>
         </thead>
         <tbody>
-        {% for cattle in cattle_list %}
+        {% for cattle in pagination %}
             <tr>
                 <td>
                     <p>{{ cattle.code }}</p>
@@ -50,5 +49,9 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 
 {% endblock %}

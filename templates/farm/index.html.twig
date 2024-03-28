@@ -12,9 +12,9 @@
     <table class="table table-striped table-hover mt-2">
         <thead class="table-success">
         <tr>
-            <th scope="col">Nome</th>
-            <th scope="col">Hectáres</th>
-            <th scope="col">Responsável</th>
+            <twig:SortableHeader attribute="f.name" label="Nome"></twig:SortableHeader>
+            <twig:SortableHeader attribute="f.hectares" label="Hectáres"></twig:SortableHeader>
+            <twig:SortableHeader attribute="f.responsible" label="Responsável"></twig:SortableHeader>
             <th scope="col">Qt. Gado</th>
             <th scope="col">Qt. Max. Gado</th>
             <th scope="col">Veterinários</th>
@@ -22,7 +22,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for farm in farms %}
+        {% for farm in pagination %}
             <tr>
                 <td>
                     <p>{{ farm.name }}</p>
@@ -52,5 +52,9 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 
 {% endblock %}
