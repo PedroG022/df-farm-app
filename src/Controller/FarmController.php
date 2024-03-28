@@ -41,24 +41,7 @@ class FarmController extends AbstractController
     public function new(Request $request): Response
     {
         $target_farm = new Farm();
-        $form = $this->createForm(FarmType::class, $target_farm, ['label' => 'Adicionar fazenda']);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $target_farm = $form->getData();
-
-            if ($this->already_exists($target_farm)) {
-                return new Response('Já existe uma fazenda com este nome!', 400);
-            }
-
-            return $this->persist_and_exit($target_farm);
-        }
-
-        return $this->render('farm/new.html.twig', [
-            'form' => $form,
-            'title' => 'Adicionar fazenda'
-        ]);
+        return $this->create_update_farm('Adicionar fazenda', $request, $target_farm);
     }
 
     # Route used to display the edit page of
@@ -67,7 +50,12 @@ class FarmController extends AbstractController
     public function edit(Uuid $id, Request $request): Response
     {
         $database_farm = $this->farmRepository->findOneById($id);
-        $form = $this->createForm(FarmType::class, $database_farm, ['label' => 'Atualizar fazenda']);
+        return $this->create_update_farm('Atualizar fazenda', $request, $database_farm);
+    }
+
+    public function create_update_farm(string $label, Request $request, Farm $farm): Response
+    {
+        $form = $this->createForm(FarmType::class, $farm, ['label' => $label]);
 
         $form->handleRequest($request);
 
@@ -83,7 +71,7 @@ class FarmController extends AbstractController
 
         return $this->render('farm/new.html.twig', [
             'form' => $form->createView(),
-            'title' => 'Atualizar fazenda'
+            'title' => $label
         ]);
     }
 
