@@ -16,6 +16,7 @@
             <twig:SortableHeader attribute="c.milk_per_week" label="Leite"></twig:SortableHeader>
             <twig:SortableHeader attribute="c.feed" label="Ração"></twig:SortableHeader>
             <twig:SortableHeader attribute="c.birthdate" label="Data de nascimento"></twig:SortableHeader>
+            <th>Estado</th>
             <th>Fazenda</th>
             <th scope="col">Ações</th>
         </tr>
@@ -37,6 +38,13 @@
                 </td>
                 <td>
                     <p>{{ cattle.birthdate.format('d/m/Y') }}</p>
+                </td>
+                <td>
+                    {% if cattle.alive %}
+                        <span class="badge text-bg-primary">Vivo</span>
+                    {% else %}
+                        <span class="badge text-bg-danger">Morto</span>
+                    {% endif %}
                 </td>
                 <td>
                     <p>{{ cattle.farm.name }}</p>

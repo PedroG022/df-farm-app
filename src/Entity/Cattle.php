@@ -46,6 +46,9 @@ class Cattle
     #[ORM\JoinColumn(nullable: false)]
     private ?Farm $farm = null;
 
+    #[ORM\Column]
+    private ?bool $alive = true;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -126,6 +129,18 @@ class Cattle
     public function setFarm(?Farm $farm): static
     {
         $this->farm = $farm;
+
+        return $this;
+    }
+
+    public function isAlive(): ?bool
+    {
+        return $this->alive;
+    }
+
+    public function setAlive(bool $alive): static
+    {
+        $this->alive = $alive;
 
         return $this;
     }
