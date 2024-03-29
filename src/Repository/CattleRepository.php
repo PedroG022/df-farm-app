@@ -59,4 +59,35 @@ class CattleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findSlaughterReady(int $page, int $limit): PaginationInterface
+    {
+        # Main query
+        $qb = $this->createQueryBuilder('c');
+
+        $five_years = new \DateTime('-5 years');
+
+        # Is 5 years old or older
+        $qb->orWhere('c.birthdate <= :five_years')
+            ->setParameter('five_years', $five_years);
+
+        # Milk per week is less than 40
+        $qb->orWhere('c.milk_per_week < 40');
+
+        # Weight is higher than 18 arrobas
+        $qb->orWhere('c.weight > (18 * 15)');
+
+        $qb->orWhere(
+            $qb->expr()->andX(
+                $qb->expr()->lt('c.milk_per_week', 70),
+                $qb->expr()->gt($qb->expr()->quot('c.feed', 7), 50)
+            )
+        );
+
+        return $this->paginator->paginate(
+            $qb,
+            $page,
+            $limit
+        );
+    }
 }
