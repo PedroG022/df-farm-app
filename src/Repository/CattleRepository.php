@@ -84,6 +84,8 @@ class CattleRepository extends ServiceEntityRepository
             )
         );
 
+        $qb->andWhere('c.alive = true');
+
         return $this->paginator->paginate(
             $qb,
             $page,
