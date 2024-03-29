@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Abate{% endblock %}
+{% block section_title %}Abate{% endblock %}
+
+{% block body %}
+    <h3>Gados passíveis de abate:</h3>
+    <table class="table table-striped table-hover mt-4">
+        <thead class="table-success">
+        <tr>
+            <twig:SortableHeader attribute="c.code" label="Código"></twig:SortableHeader>
+            <twig:SortableHeader attribute="c.weight" label="Peso"></twig:SortableHeader>
+            <twig:SortableHeader attribute="c.milk_per_week" label="Leite"></twig:SortableHeader>
+            <twig:SortableHeader attribute="c.feed" label="Ração"></twig:SortableHeader>
+            <twig:SortableHeader attribute="c.birthdate" label="Data de nascimento"></twig:SortableHeader>
+            <th>Fazenda</th>
+            <th scope="col">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for cattle in pagination %}
+            <tr>
+                <td>
+                    <p>{{ cattle.code }}</p>
+                </td>
+                <td>
+                    <p>{{ cattle.weight }} Kg</p>
+                </td>
+                <td>
+                    <p>{{ cattle.milkPerWeek }} L</p>
+                </td>
+                <td>
+                    <p>{{ cattle.feed }} Kg</p>
+                </td>
+                <td>
+                    <p>{{ cattle.birthdate.format('d/m/Y') }}</p>
+                </td>
+                <td>
+                    <p>{{ cattle.farm.name }}</p>
+                </td>
+                <td>
+                    <a href="{{ path('slaughter_cattle', {id: cattle.id}) }}">Enviar para abate</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+{% endblock %}
