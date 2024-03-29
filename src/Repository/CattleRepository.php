@@ -60,6 +60,54 @@ class CattleRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function slaughteredAmount(): ?int
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        $qb->select('count(c.id)');
+        $qb->where('c.alive = false');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function milkPerWeek(): ?float
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        $qb->select('sum(c.milk_per_week)');
+        $qb->where('c.alive = true');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function feedPerWeek(): ?float
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        $qb->select('sum(c.feed)');
+        $qb->where('c.alive = true');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function feedPerWeekIsHigherThan500andOneYearOld(): ?int
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        $qb->select('count(c.code)');
+        $qb->where('c.feed > 500');
+
+        $one_year = new \DateTime('-1 years');
+
+        $qb->andWhere('c.birthdate >= :one_year')
+            ->setParameter('one_year', $one_year);
+
+        $qb->andWhere('c.alive = true');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+
     public function findSlaughterReady(int $page, int $limit): PaginationInterface
     {
         # Main query

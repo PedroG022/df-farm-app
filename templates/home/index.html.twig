@@ -3,5 +3,16 @@
 {% block title %}Home{% endblock %}
 {% block section_title %}Home{% endblock %}
 
+
 {% block body %}
+
+    <div class="mt-4">
+        <h1>Relatórios</h1>
+
+        <h4>Total de animais abatidos: {{ slaughtered_count }} animal(is).</h4>
+        <h4>Total de leite produzido por semana: {{ milk_amount }}L</h4>
+        <h4>Total de ração consumida por semana: {{ feed_per_week }}Kg</h4>
+        <h4>Animais de até um ano que consomem mais de 500kg de ração por semana: {{ feed_exceeds }} animal(is).</h4>
+    </div>
+
 {% endblock %}
